@@ -1,8 +1,12 @@
 package com.inteliment.demo.controllers;
 
+import java.util.HashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +32,7 @@ public class FileUplodeAndProcessController {
 	private FileHandler fileHandler;
 	
 	@RequestMapping(path="/upload",method=RequestMethod.POST)
-	Storage uploadeFile(@RequestParam("file") final MultipartFile file,@RequestParam("type") String type,
+	ResponseEntity<?> uploadeFile(@RequestParam("file") final MultipartFile file,@RequestParam("type") String type,
 			 @RequestParam("criteria") String criteria)
 	{
 	logger.info("Rectify csv and psv files or not.");
@@ -36,16 +40,15 @@ public class FileUplodeAndProcessController {
 	ParseService parseService=	fileHandler.getHandler(file);
 	// storing data of csv and psv files in database
 	  Storage storageData =parseService.parse(file,type);
-	 return  result.put("storageData", storageData);
+	  // after providing criteria it will work. depending on which data and which field then we will filter on it.
+		 //Storage storedData=parseService.filter(file,criteria);
+	  		result.put("storageData", storageData);
 			response.setResponseCode(200);
 			response.setComment("File Save Successfully");
 			response.setResponseMessage("FETCH");
 			response.setResult(result);
 			return new ResponseEntity<MyResponse>(response, HttpStatus.OK);
 		
-		
-	 // after providing criteria it will work. depending on which data and which field then we will filter on it.
-	 //Storage storedData=parseService.filter(file,criteria);
 	}
 	
 	/*@RequestMapping(path="/upload",method=RequestMethod.GET)
