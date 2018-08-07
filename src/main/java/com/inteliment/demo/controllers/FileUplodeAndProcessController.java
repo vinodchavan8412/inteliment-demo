@@ -12,12 +12,18 @@ import org.springframework.web.multipart.MultipartFile;
 import com.inteliment.demo.config.FileHandler;
 import com.inteliment.demo.models.Storage;
 import com.inteliment.demo.services.ParseService;
+import com.inteliment.demo.util.MyResponse;
 
 @RestController
 public class FileUplodeAndProcessController {
 	
 	public static final Logger logger = LoggerFactory.getLogger(FileUplodeAndProcessController.class);
 	
+	HashMap<String, Object> result;
+	
+	@Autowired
+	private MyResponse response;
+ 
 	@Autowired
 	private FileHandler fileHandler;
 	
@@ -29,8 +35,14 @@ public class FileUplodeAndProcessController {
 	// rectify csv and psv files or not.
 	ParseService parseService=	fileHandler.getHandler(file);
 	// storing data of csv and psv files in database
-	 
-	 return parseService.parse(file,type);
+	  Storage storageData =parseService.parse(file,type);
+	 return  result.put("storageData", storageData);
+			response.setResponseCode(200);
+			response.setComment("File Save Successfully");
+			response.setResponseMessage("FETCH");
+			response.setResult(result);
+			return new ResponseEntity<MyResponse>(response, HttpStatus.OK);
+		
 		
 	 // after providing criteria it will work. depending on which data and which field then we will filter on it.
 	 //Storage storedData=parseService.filter(file,criteria);
