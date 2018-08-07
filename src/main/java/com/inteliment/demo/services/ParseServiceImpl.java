@@ -94,7 +94,7 @@ public class ParseServiceImpl implements ParseService {
 
 			String header = "";
 			try {
-				return MultiColumnCsvSortExtended.writeCsv(header, lines, outputStream);
+				MultiColumnCsvSortExtended.writeCsv(header, lines, outputStream);
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
